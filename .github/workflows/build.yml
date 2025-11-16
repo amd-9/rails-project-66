@@ -1,0 +1,21 @@
+name: Build
+
+on:
+  workfolw_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # 5.0.0
+      - name: Setup ruby
+        uses:  ruby/setup-ruby@d5126b9b3579e429dd52e51e68624dda2e05be25 # v1.267.0
+        with:
+          ruby-version: '3.2.2'
+          bundler-cache: true
+      - run: bundle install
+      - run: bundle exec rake assets:precompile
+      - run: bundle exec rake assets:clean
+          
