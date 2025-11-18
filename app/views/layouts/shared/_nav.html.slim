@@ -1,0 +1,12 @@
+nav.navbar.navbar-expand-lg.bg-body-tertiary
+    .container-fluid
+        a.navbar-brand href=root_path
+            span.ms-2 Repo Analyzer
+        ul.navbar-nav.d-flex.align-items-center
+            - if current_user
+                = link_to 'Logout', logout_auth_path('github'), class: %w[btn btn-primary]
+            - else
+                = form_tag(auth_request_path('github'), method: 'post', data: { turbo: false }) do
+                        button.btn.btn-primary type='submit'
+                            i.bi.bi-github.me-2
+                            span Login
