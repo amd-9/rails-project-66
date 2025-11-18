@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   get 'service-worker' => 'rails/pwa#service_worker', as: :pwa_service_worker
   get 'manifest' => 'rails/pwa#manifest', as: :pwa_manifest
 
+  root 'web/repositories#index'
+
   post 'auth/:provider', to: 'auth#request', as: :auth_request
 
   scope module: :web do
@@ -20,6 +22,8 @@ Rails.application.routes.draw do
         get 'logout'
       end
     end
+
+    resources :repositories, only: %(index)
   end
 
   # Defines the root path route ("/")
