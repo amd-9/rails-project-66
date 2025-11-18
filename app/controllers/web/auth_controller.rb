@@ -3,11 +3,13 @@
 class Web::AuthController < Web::ApplicationController
   def callback
     user_info = request.env['omniauth.auth']
-    user_name = user_info[:info][:nickname]
+    user_nickname = user_info[:info][:nickname]
     user_email = user_info[:info][:email]
+    user_token = user_info[:credentials][:token]
 
     user = User.find_or_initialize_by(email: user_email)
-    user.name = user_name
+    user.nickname = user_nickname
+    user.token = user_token
 
     flash_message = user.persisted? ? t('auth.welcome_back') : t('auth.login.success')
 
