@@ -1,0 +1,6 @@
+= simple_form_for @repository do |f|
+    = f.error_notification
+    = f.input :github_id,
+        as: :select,
+        collection: @repos, label_method: :name, value_method: :id
+    = f.button :submit, class: 'btn btn-primary'

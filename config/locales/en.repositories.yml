@@ -1,0 +1,7 @@
+en:
+  repository:
+    create:
+      success: Repository successfully created!
+  repositories:
+    new:
+      title: Add new repository

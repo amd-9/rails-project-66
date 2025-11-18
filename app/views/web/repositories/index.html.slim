@@ -1,1 +1,7 @@
 h1 Repositories list
+
+= link_to t('repositories.new.title'), new_repository_path, class: %w[btn btn-primary]
+
+ul
+    - @repos.each do |repo|
+        li = repo.name

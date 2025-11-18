@@ -23,7 +23,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :repositories, only: %(index)
+    resources :repositories, only: %i[index new create]
   end
 
   # Defines the root path route ("/")
