@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  github_id: MyString
+  full_name: MyString
+  language: MyString
+  clone_url: MyString
+  ssh_url: MyString
+
+two:
+  name: MyString
+  github_id: MyString
+  full_name: MyString
+  language: MyString
+  clone_url: MyString
+  ssh_url: MyString
