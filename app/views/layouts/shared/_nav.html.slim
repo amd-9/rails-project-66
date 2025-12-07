@@ -1,12 +1,23 @@
-nav.navbar.navbar-expand-lg.bg-body-tertiary
+nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.stiky-top
     .container-fluid
-        a.navbar-brand href=root_path
-            span.ms-2 Repo Analyzer
-        ul.navbar-nav.d-flex.align-items-center
-            - if current_user
-                = link_to 'Logout', logout_auth_path('github'), class: %w[btn btn-primary]
-            - else
-                = form_tag(auth_request_path('github'), method: 'post', data: { turbo: false }) do
-                        button.btn.btn-primary type='submit'
-                            i.bi.bi-github.me-2
-                            span Login
+        = link_to root_path, class: %w[navbar-brand fw-bold] do
+            <i class="bi bi-git me-2"></i>
+            = t('.title')
+        button.navbar-toggler type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+            span.navbar-toggler-icon
+
+        .collapse.navbar-collapse#navbarContent
+            span Search here
+
+            ul.navbar-nav.ms-auto.align-items-center
+                li.nav-item.me-3
+                    i.bi.bi-person-circle.fs-5
+                    span Profile
+                li.nav-item
+                    - if current_user
+                        = link_to t('.logout_button'), logout_auth_path('github'), class: %w[btn btn-primary]
+                    - else
+                        = form_tag(auth_request_path('github'), method: 'post', data: { turbo: false }) do
+                                button.nav-link type='submit'
+                                    i.bi.bi-github.me-2
+                                    = t('.login_button')

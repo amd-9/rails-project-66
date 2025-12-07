@@ -19,4 +19,11 @@ html
   body
     = render 'layouts/shared/nav'
     = render 'layouts/shared/flash'
-    = yield
+    #wrapper.d-flex.flex-grow-1
+      = render 'layouts/shared/sidebar'
+
+      .content-wrapper.d-flex.flex-column.flex-grow-1
+        main.main-content.flex-glow-1
+          = yield
+
+    = render 'layouts/shared/footer'

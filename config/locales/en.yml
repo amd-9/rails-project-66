@@ -28,7 +28,14 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  layouts:
+    shared:
+      nav:
+        title: RepoAnalyzer
+        login_button: Login
+        logout_button: Logout
+      footer:
+        title: 2025 RepoAnalyzer
   auth:
     logout:
       success: Logged out successfully!

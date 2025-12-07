@@ -1,7 +1,15 @@
-h1 Repositories list
+h2 Repositories list
 
 = link_to t('repositories.new.title'), new_repository_path, class: %w[btn btn-primary]
 
-ul
-    - @repos.each do |repo|
-        li = repo.name
+.table-responsive
+    table.table.table-striped.table-sm
+        thead
+            tr
+                th #
+                th Name
+        tbody
+            - @repos.each_with_index do |repo, index|
+                tr
+                    td = index
+                    td = repo.name

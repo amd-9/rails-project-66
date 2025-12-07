@@ -3,5 +3,6 @@ en:
     create:
       success: Repository successfully created!
   repositories:
+    title: Repositories
     new:
       title: Add new repository
