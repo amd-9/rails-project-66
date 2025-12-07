@@ -71,3 +71,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'webmock'
 end
+
+group :production do
+  gem 'pg'
+end

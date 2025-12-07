@@ -206,6 +206,7 @@ GEM
     parser (3.3.10.0)
       ast (~> 2.4.1)
       racc
+    pg (1.6.0-x86_64-linux)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -389,6 +390,7 @@ DEPENDENCIES
   omniauth
   omniauth-github
   omniauth-rails_csrf_protection
+  pg
   puma (>= 5.0)
   rails (~> 7.2.2, >= 7.2.2.1)
   rollbar
