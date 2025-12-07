@@ -10,9 +10,11 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.stiky-top
             span Search here
 
             ul.navbar-nav.ms-auto.align-items-center
-                li.nav-item.me-3
-                    i.bi.bi-person-circle.fs-5
-                    span Profile
+                - if current_user
+                    li.nav-item.me-3
+                        = link_to root_path, class: %w[nav-link] do
+                            i.bi.bi-person-circle.fs-5.me-2
+                            = current_user.nickname
                 li.nav-item
                     - if current_user
                         = link_to t('.logout_button'), logout_auth_path('github'), class: %w[btn btn-primary]
