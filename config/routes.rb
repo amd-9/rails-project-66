@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   get 'service-worker' => 'rails/pwa#service_worker', as: :pwa_service_worker
   get 'manifest' => 'rails/pwa#manifest', as: :pwa_manifest
 
-  root 'web/repositories#index'
+  root 'web/home#index'
 
   post 'auth/:provider', to: 'auth#request', as: :auth_request
 
@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     end
 
     resources :repositories, only: %i[index new create]
+    resource :home, only: %i[index]
   end
 
   # Defines the root path route ("/")

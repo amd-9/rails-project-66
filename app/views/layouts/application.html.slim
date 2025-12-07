@@ -20,7 +20,8 @@ html
     = render 'layouts/shared/nav'
     = render 'layouts/shared/flash'
     #wrapper.d-flex.flex-grow-1
-      = render 'layouts/shared/sidebar'
+      - if current_user
+        = render 'layouts/shared/sidebar'
 
       .content-wrapper.d-flex.flex-column.flex-grow-1
         main.main-content.flex-glow-1
