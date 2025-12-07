@@ -3,6 +3,8 @@
 class Web::RepositoriesController < Web::ApplicationController
   require 'octokit'
 
+  before_action :authorize_user
+
   def index
     @repos = []
 
@@ -39,5 +41,9 @@ class Web::RepositoriesController < Web::ApplicationController
     else
       render :new, status: :unprocessable_content
     end
+  end
+
+  def authorize_user
+    return redirect_to root_path, alert: t('auth.not_logged_in') while current_user.nil?
   end
 end

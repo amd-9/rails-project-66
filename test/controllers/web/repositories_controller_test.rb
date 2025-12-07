@@ -10,6 +10,8 @@ class Web::RepositoriesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index' do
+    sign_in(@user)
+
     get repositories_path
     assert_response :success
   end
