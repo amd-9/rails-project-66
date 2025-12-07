@@ -1,11 +1,6 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  email: MyString
-  nickname: MyString
-  token: MyString
-
-two:
-  email: MyString
-  nickname: MyString
-  token: MyString
+developer:
+  email: developer@test.io
+  nickname: developer
+  token: some_github_token_for_test

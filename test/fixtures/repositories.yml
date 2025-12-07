@@ -1,17 +1,10 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  github_id: MyString
-  full_name: MyString
-  language: MyString
-  clone_url: MyString
-  ssh_url: MyString
-
-two:
-  name: MyString
-  github_id: MyString
-  full_name: MyString
-  language: MyString
-  clone_url: MyString
-  ssh_url: MyString
+ruby_repo:
+  name: ruby_repo
+  github_id: 1
+  full_name: Sample Ruby repo for tests
+  language: ruby
+  clone_url: https://github.com/ruby_repo_analyzer/ruby_repo.git
+  ssh_url: git@github.com:ruby_repo_analyzer/ruby_repo.git
+  user: developer
