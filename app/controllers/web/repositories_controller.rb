@@ -18,7 +18,7 @@ class Web::RepositoriesController < Web::ApplicationController
     return if current_user.nil?
 
     client = Octokit::Client.new access_token: current_user.token, auto_paginate: true
-    @repos = client.repos
+    @repos = client.repos.presence || []
   end
 
   def create
