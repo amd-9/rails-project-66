@@ -44,6 +44,6 @@ class Web::RepositoriesController < Web::ApplicationController
   end
 
   def authorize_user
-    return redirect_to root_path, alert: t('auth.not_logged_in') while current_user.nil?
+    redirect_to root_path, alert: t('auth.not_logged_in') if current_user.nil?
   end
 end
