@@ -83,7 +83,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.19.0)
       msgpack (~> 1.2)
-    brakeman (7.1.1)
+    brakeman (7.1.2)
       racc
     builder (3.3.0)
     capybara (3.40.0)
@@ -206,6 +206,7 @@ GEM
     parser (3.3.10.0)
       ast (~> 2.4.1)
       racc
+    pg (1.6.0-aarch64-linux)
     pg (1.6.0-x86_64-linux)
     pp (0.6.3)
       prettyprint
