@@ -6,3 +6,5 @@ en:
     title: Repositories
     new:
       title: Add new repository
+    run_check:
+      confirm: Check repository?

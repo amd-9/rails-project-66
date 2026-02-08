@@ -13,6 +13,10 @@ class Web::RepositoriesController < Web::ApplicationController
     @repos = Repository.where(user: current_user)
   end
 
+  def show
+    @repository = Repository.find(params[:id])
+  end
+
   def new
     @repos = []
     @repository = Repository.new
@@ -48,6 +52,12 @@ class Web::RepositoriesController < Web::ApplicationController
 
   def authorize_user
     redirect_to root_path, alert: t('auth.not_logged_in') if current_user.nil?
+  end
+
+  def run_check
+    repository = Repository.find(params[:id])
+    repo_checker = ApplicationContainer.resolve(:repo_checker).new
+    repo_checker.check(repository)
   end
 
   private

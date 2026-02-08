@@ -23,7 +23,12 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :repositories, only: %i[index new create]
+    resources :repositories, only: %i[index show new create] do
+      member do
+        patch 'run_check'
+      end
+    end
+
     resource :home, only: %i[index]
   end
 

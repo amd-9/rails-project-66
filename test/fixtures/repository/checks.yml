@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  commit_id: MyString
+  status: 1
+  passed: false
+  repository: ruby_repo
+
+two:
+  commit_id: MyString
+  status: 1
+  passed: false
+  repository: ruby_repo

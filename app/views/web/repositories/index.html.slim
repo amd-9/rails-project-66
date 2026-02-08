@@ -11,5 +11,5 @@ h2 Repositories list
         tbody
             - @repos.each_with_index do |repo, index|
                 tr
-                    td = index
+                    td = link_to index, repository_path(repo)
                     td = repo.name

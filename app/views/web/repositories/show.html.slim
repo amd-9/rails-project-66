@@ -1,0 +1,19 @@
+.row
+    = link_to t('check.run'), run_check_repository_path, data: { turbo_method: :patch, turbo_confirm: t('repositories.run_check.confirm') }, class: %w[btn btn-primary]
+.card.mt-5
+    .row
+        .col-8
+            .card-body
+                h2 = t('check.name')
+                h5.card-title = @repository.name
+                h6 = t('check.language')
+                p.card-text = @repository.language
+                h6 = t('check.created_at')
+                p.card-text = @repository.created_at
+                h6 = t('check.updated_at')
+                p.card-text = @repository.updated_at
+
+.row
+    - if @repository.checks.empty?
+        .col
+            h3 = t('checks.index.no_items')

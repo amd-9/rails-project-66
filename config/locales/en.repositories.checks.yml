@@ -1,0 +1,10 @@
+en:
+  check:
+    name: Name
+    language: Language
+    created_at: Created at
+    updated_at: Updated at
+    run: Check
+  checks:
+    index:
+      no_items: No checks found!
