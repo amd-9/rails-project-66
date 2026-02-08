@@ -19,14 +19,14 @@ class Web::RepositoriesController < Web::ApplicationController
 
     return if current_user.nil?
 
-    client = Octokit::Client.new access_token: current_user.token, auto_paginate: true
+    client = ApplicationContainer.resolve(:github_client).new access_token: current_user.token, auto_paginate: true
     ruby_repos = client.search_repos("user:#{current_user.nickname} language:ruby")
 
     @repos = ruby_repos.total_count.positive? ? ruby_repos.items : []
   end
 
   def create
-    client = Octokit::Client.new access_token: current_user.token, auto_paginate: true
+    client = ApplicationContainer.resolve(:github_client).new access_token: current_user.token, auto_paginate: true
     selected_repository = client.repository(params[:repository][:github_id].to_i)
 
     repository = Repository.new
@@ -34,7 +34,7 @@ class Web::RepositoriesController < Web::ApplicationController
     repository.name = selected_repository[:name]
     repository.github_id = selected_repository[:id]
     repository.full_name = selected_repository[:full_name]
-    repository.language = selected_repository[:laguage]
+    repository.language = selected_repository[:language]
     repository.clone_url = selected_repository[:clone_url]
     repository.ssh_url = selected_repository[:ssh_url]
     repository.user = current_user
