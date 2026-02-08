@@ -20,7 +20,9 @@ class Web::RepositoriesController < Web::ApplicationController
     return if current_user.nil?
 
     client = Octokit::Client.new access_token: current_user.token, auto_paginate: true
-    @repos = client.repos.presence || []
+    ruby_repos = client.search_repos("user:#{current_user.nickname} language:ruby")
+
+    @repos = ruby_repos.total_count.positive? ? ruby_repos.items : []
   end
 
   def create
@@ -28,6 +30,7 @@ class Web::RepositoriesController < Web::ApplicationController
     selected_repository = client.repository(params[:repository][:github_id].to_i)
 
     repository = Repository.new
+
     repository.name = selected_repository[:name]
     repository.github_id = selected_repository[:id]
     repository.full_name = selected_repository[:full_name]
@@ -45,5 +48,11 @@ class Web::RepositoriesController < Web::ApplicationController
 
   def authorize_user
     redirect_to root_path, alert: t('auth.not_logged_in') if current_user.nil?
+  end
+
+  private
+
+  def repository_params
+    params.require(:repository).permit(:github_id)
   end
 end
