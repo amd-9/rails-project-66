@@ -1,5 +1,10 @@
 en:
   repository:
+    show:
+      name: Name
+      language: Language
+      created_at: Created
+      updated_at: Updated
     create:
       success: Repository successfully created!
   repositories:

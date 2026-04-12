@@ -34,4 +34,16 @@ class Web::RepositoriesControllerTest < ActionDispatch::IntegrationTest
       post repositories_path, params: { repository: attrs }
     end
   end
+
+  test 'should run repository check' do
+    sign_in(@user)
+
+    assert_difference('Repository::Check.count') do
+      patch run_check_repository_path(@repository)
+    end
+
+    last_check = Repository::Check.last
+
+    assert last_check.completed?
+  end
 end

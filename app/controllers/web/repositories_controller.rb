@@ -14,7 +14,7 @@ class Web::RepositoriesController < Web::ApplicationController
   end
 
   def show
-    @repository = Repository.find(params[:id])
+    @repository = Repository.includes(:checks).find(params[:id])
   end
 
   def new

@@ -36,12 +36,14 @@ gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'bootsnap', require: false
 
 gem 'aasm'
+gem 'docker-api'
 gem 'dry-container'
 gem 'enumerize'
 gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
 gem 'omniauth-rails_csrf_protection'
+gem 'open3'
 gem 'rollbar'
 gem 'simple_form'
 gem 'slim'

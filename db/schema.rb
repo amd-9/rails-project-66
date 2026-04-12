@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_08_120244) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_12_153946) do
   create_table "repositories", force: :cascade do |t|
     t.string "name"
     t.string "github_id"
@@ -26,7 +26,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_08_120244) do
 
   create_table "repository_checks", force: :cascade do |t|
     t.string "commit_id"
-    t.integer "status"
+    t.string "status"
     t.boolean "passed"
     t.integer "repository_id", null: false
     t.datetime "created_at", null: false

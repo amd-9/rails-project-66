@@ -10,17 +10,22 @@ class Repository::Check < ApplicationRecord
     state :cloning
     state :checking
     state :completed
+    state :failed
 
     event :clone do
       transitions from: :new, to: :cloning
     end
 
     event :run_check do
-      transitions from: :cloning, to: :ckecking
+      transitions from: :cloning, to: :checking
     end
 
     event :complete_check do
       transitions from: :checking, to: :completed
+    end
+
+    event :fail_check do
+      transitions from: :checking, to: :failed
     end
   end
 end

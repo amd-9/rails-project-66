@@ -1,10 +1,12 @@
 en:
   check:
-    name: Name
-    language: Language
+    commit_id: Commit hash
+    status: Status
+    passed: Passed
     created_at: Created at
     updated_at: Updated at
     run: Check
   checks:
     index:
+      title: Checks
       no_items: No checks found!
