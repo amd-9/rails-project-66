@@ -42,16 +42,14 @@ class RepoChecker
       check.clone_repo!
       @container.exec(['git', 'clone', repo_to_check.clone_url.to_s, '.'])
       repo_commit_id, = @container.exec(%w[git rev-parse HEAD])
-      check.commit_id = repo_commit_id
+      check.commit_id = repo_commit_id[0].to_s
       check.save!
       @container.exec(%w[gem install rubocop])
       @container.exec(%w[rubocop -v])
       check.run_check!
       check_result, = @container.exec(%w[rubocop])
 
-      no_offences_re = 'no offenses detected'
-
-      if no_offences_re.match?(check_result.to_s)
+      if check_result[0].to_s.match?(/no offenses detected/)
         check.passed = true
         check.complete_check!
       else

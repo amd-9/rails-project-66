@@ -10,3 +10,7 @@ en:
     index:
       title: Checks
       no_items: No checks found!
+      actions: Actions
+      show: Show
+    show:
+      back: Back

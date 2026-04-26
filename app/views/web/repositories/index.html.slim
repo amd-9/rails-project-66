@@ -8,8 +8,10 @@ h2 Repositories list
             tr
                 th #
                 th Name
+                td Last check status
         tbody
             - @repos.each_with_index do |repo, index|
                 tr
                     td = link_to index, repository_path(repo)
                     td = repo.name
+                    td = repo.checks.last.status

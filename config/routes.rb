@@ -26,6 +26,8 @@ Rails.application.routes.draw do
     end
 
     resources :repositories, only: %i[index show new create] do
+      resources :checks, only: [:show], module: :repositories
+
       member do
         patch 'run_check'
       end

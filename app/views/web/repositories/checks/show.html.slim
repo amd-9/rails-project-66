@@ -1,0 +1,8 @@
+.card
+    .card-body
+        h5.card-title Check
+        h6.card-subtitle.mb-2.text-body-secondary = @check.commit_id
+        p = "Started at: #{@check.created_at}"
+        p = "Completed at: #{@check.updated_at}"
+        p = "Status: #{@check.status}"
+        = link_to t('checks.show.back'), repository_path(@check.repository), class: %w[btn btn-primary]

@@ -28,12 +28,15 @@
                         th = t('check.passed')
                         th = t('check.created_at')
                         th = t('check.updated_at')
+                        td = t('check.index.actions')
                 tbody
                     - @repository.checks.each_with_index do |check, index|
                         tr
                             td = index
-                            td = check.commit_id
+                            td = link_to check.commit_id, "https://github.com/#{@repository.full_name}/commits/#{check.commit_id}"
                             td = check.status
                             td = check.passed
                             td = check.created_at
                             td = check.updated_at
+                            td = link_to t('check.index.show'), repository_check_path(@repository, check), class: %w[btn btn-primary]
+.row
