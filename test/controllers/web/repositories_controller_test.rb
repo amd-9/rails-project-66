@@ -38,8 +38,10 @@ class Web::RepositoriesControllerTest < ActionDispatch::IntegrationTest
   test 'should run repository check' do
     sign_in(@user)
 
-    assert_difference('Repository::Check.count') do
-      patch run_check_repository_path(@repository)
+    Sidekiq::Testing.inline! do
+      assert_difference('Repository::Check.count') do
+        patch run_check_repository_path(@repository)
+      end
     end
 
     last_check = Repository::Check.last

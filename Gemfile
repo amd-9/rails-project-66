@@ -45,6 +45,7 @@ gem 'omniauth-github'
 gem 'omniauth-rails_csrf_protection'
 gem 'open3'
 gem 'rollbar'
+gem 'sidekiq'
 gem 'simple_form'
 gem 'slim'
 

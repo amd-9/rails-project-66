@@ -55,9 +55,7 @@ class Web::RepositoriesController < Web::ApplicationController
   end
 
   def run_check
-    repository = Repository.find(params[:id])
-    repo_checker = ApplicationContainer.resolve(:repo_checker).new
-    repo_checker.check(repository)
+    RunRepoCheckJob.perform_async(params[:id])
   end
 
   private

@@ -12,7 +12,7 @@ class Repository::Check < ApplicationRecord
     state :completed
     state :failed
 
-    event :clone do
+    event :clone_repo do
       transitions from: :new, to: :cloning
     end
 

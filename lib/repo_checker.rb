@@ -14,7 +14,8 @@ class RepoChecker
   private
 
   def prepare_container
-    @container = Docker::Container.create('cmd' => ['tail', '-f', '/dev/null'], 'Image' => 'ruby:3.2.11')
+    Docker::Image.create('fromImage' => 'ruby:3.2.11')
+    @container = Docker::Container.create('WorkingDir' => '/app', 'cmd' => ['tail', '-f', '/dev/null'], 'Image' => 'ruby:3.2.11')
     @container.start
   end
 
@@ -35,20 +36,29 @@ class RepoChecker
   def clone_repo(repo_to_check)
     return unless @container.json['State']['Running']
 
-    check = repo_to_check.checks.build({ status: :new })
-    check.save!
-    check.clone!
-    @container.exec(['git', 'clone', repo_to_check.clone_url.to_s, 'app'])
-    @container.exec(%w[gem install rubocop])
-    check.run_check!
-    @container.exec(['rubocop', '/app'])
-    check = repo_to_check.checks.build({ status: :new })
-    check.complete_check!
-    check.passing = true
-    check.save!
+    begin
+      check = repo_to_check.checks.build({ status: :new })
+      check.save!
+      check.clone_repo!
+      @container.exec(['git', 'clone', repo_to_check.clone_url.to_s, '.'])
+      repo_commit_id, = @container.exec(%w[git rev-parse HEAD])
+      check.commit_id = repo_commit_id
+      check.save!
+      @container.exec(%w[gem install rubocop])
+      @container.exec(%w[rubocop -v])
+      check.run_check!
+      check_result, = @container.exec(%w[rubocop])
 
-    # rescue
-    #  debugger
-    #  destroy_container
+      no_offences_re = 'no offenses detected'
+
+      if no_offences_re.match?(check_result.to_s)
+        check.passed = true
+        check.complete_check!
+      else
+        check.fail_check!
+      end
+    ensure
+      destroy_container
+    end
   end
 end
