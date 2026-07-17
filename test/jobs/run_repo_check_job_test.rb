@@ -9,8 +9,10 @@ class RunRepoCheckJobTest < ActiveJob::TestCase
 
   test 'should run repo check' do
     assert_enqueued_with(job: RunRepoCheckJob) do
-      RunRepoCheckJob.perfom_later(@repository.id)
+      RunRepoCheckJob.perform_later(@repository.id)
     end
+
+    perform_enqueued_jobs
 
     last_check = Repository::Check.last
 

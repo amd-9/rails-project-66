@@ -42,6 +42,8 @@ class Web::RepositoriesControllerTest < ActionDispatch::IntegrationTest
       patch run_check_repository_path(@repository)
     end
 
+    perform_enqueued_jobs
+
     last_check = Repository::Check.last
 
     assert last_check.completed?
