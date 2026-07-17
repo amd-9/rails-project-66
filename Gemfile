@@ -45,9 +45,10 @@ gem 'omniauth-github'
 gem 'omniauth-rails_csrf_protection'
 gem 'open3'
 gem 'rollbar'
-gem 'sidekiq'
 gem 'simple_form'
 gem 'slim'
+gem "solid_queue", "~> 1.4"
+gem "mission_control-jobs"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"

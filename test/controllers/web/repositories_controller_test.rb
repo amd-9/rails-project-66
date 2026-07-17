@@ -3,6 +3,7 @@
 require 'test_helper'
 
 class Web::RepositoriesControllerTest < ActionDispatch::IntegrationTest
+
   setup do
     @user = users(:developer)
 
@@ -38,10 +39,8 @@ class Web::RepositoriesControllerTest < ActionDispatch::IntegrationTest
   test 'should run repository check' do
     sign_in(@user)
 
-    Sidekiq::Testing.inline! do
-      assert_difference('Repository::Check.count') do
-        patch run_check_repository_path(@repository)
-      end
+    assert_enqueued_with(job: RunRepoCheckJob) do
+      patch run_check_repository_path(@repository)
     end
 
     last_check = Repository::Check.last
