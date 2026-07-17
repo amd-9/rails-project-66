@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class RunRepoCheckJobTest < ActiveJob::TestCase
-
   setup do
     @repository = repositories(:ruby_repo)
   end

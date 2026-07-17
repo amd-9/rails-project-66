@@ -34,7 +34,7 @@ Rails.application.routes.draw do
     # resource :home, only: %i[index]
   end
 
-  mount MissionControl::Jobs::Engine, at: "/jobs"
+  mount MissionControl::Jobs::Engine, at: '/jobs'
   # mount Sidekiq::Web => '/sidekiq'
 
   # Defines the root path route ("/")

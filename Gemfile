@@ -39,6 +39,7 @@ gem 'aasm'
 gem 'docker-api'
 gem 'dry-container'
 gem 'enumerize'
+gem 'mission_control-jobs'
 gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
@@ -47,8 +48,7 @@ gem 'open3'
 gem 'rollbar'
 gem 'simple_form'
 gem 'slim'
-gem "solid_queue", "~> 1.4"
-gem "mission_control-jobs"
+gem 'solid_queue', '~> 1.4'
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
