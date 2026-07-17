@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_12_153946) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_17_171557) do
   create_table "repositories", force: :cascade do |t|
-    t.string "name"
-    t.string "github_id"
-    t.string "full_name"
-    t.string "language"
     t.string "clone_url"
-    t.string "ssh_url"
     t.datetime "created_at", null: false
+    t.string "full_name"
+    t.string "github_id"
+    t.string "language"
+    t.string "name"
+    t.string "ssh_url"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["user_id"], name: "index_repositories_on_user_id"
@@ -26,19 +26,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_12_153946) do
 
   create_table "repository_checks", force: :cascade do |t|
     t.string "commit_id"
-    t.string "status"
+    t.datetime "created_at", null: false
     t.boolean "passed"
     t.integer "repository_id", null: false
-    t.datetime "created_at", null: false
+    t.string "status"
     t.datetime "updated_at", null: false
     t.index ["repository_id"], name: "index_repository_checks_on_repository_id"
   end
 
   create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
     t.string "email"
     t.string "nickname"
     t.string "token"
-    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 

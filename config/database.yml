@@ -9,16 +9,27 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
+
 development:
-  <<: *default
-  database: storage/development.sqlite3
+  app:
+    <<: *default
+    database: storage/development.sqlite3
+
+  queue:
+    <<: *default
+    database: storage/development_queue.sqlite3
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: storage/test.sqlite3
+  app:
+    <<: *default
+    database: storage/test.sqlite3
+
+  queue:
+    <<: *default
+    database: storage/test_queue.sqlite3
 
 
 # SQLite3 write its data on the local filesystem, as such it requires
@@ -28,8 +39,14 @@ test:
 # Similarly, if you deploy your application as a Docker container, you must
 # ensure the database is located in a persisted volume.
 production:
-  adapter: postgresql
-  url: <%= ENV['DATABASE_URL'] %>
-  username: <%= ENV['PGUSER'] %>
-  password: <%= ENV['PGPASSWORD'] %>
+  app: &default_production
+    adapter: postgresql
+    url: <%= ENV['DATABASE_URL'] %>
+    username: <%= ENV['PGUSER'] %>
+    password: <%= ENV['PGPASSWORD'] %>
+
+  queue:
+    <<: *default_production
+    url: <%= ENV['DATABASE_URL'] %>
+    migrations_paths: db/queue_migrate
   # database: path/to/persistent/storage/production.sqlite3

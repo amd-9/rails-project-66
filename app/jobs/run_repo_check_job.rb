@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class RunRepoCheckJob
-  include Sidekiq::Worker
-
+class RunRepoCheckJob < ApplicationJob
   queue_as :default
 
   def perform(repo_id)

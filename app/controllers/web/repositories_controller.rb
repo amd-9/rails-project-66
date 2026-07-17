@@ -55,7 +55,7 @@ class Web::RepositoriesController < Web::ApplicationController
   end
 
   def run_check
-    RunRepoCheckJob.perform_async(params[:id])
+    RunRepoCheckJob.perform_later(params[:id])
   end
 
   private
