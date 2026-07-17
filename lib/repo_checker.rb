@@ -14,8 +14,8 @@ class RepoChecker
   private
 
   def prepare_container
-    Docker::Image.create('fromImage' => 'ruby:3.2.11')
-    @container = Docker::Container.create('WorkingDir' => '/app', 'cmd' => ['tail', '-f', '/dev/null'], 'Image' => 'ruby:3.2.11')
+    Docker::Image.create('fromImage' => 'ruby:4.0.6')
+    @container = Docker::Container.create('WorkingDir' => '/app', 'cmd' => ['tail', '-f', '/dev/null'], 'Image' => 'ruby:4.0.6')
     @container.start
   end
 

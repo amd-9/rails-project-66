@@ -3,11 +3,11 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 7.2.2', '>= 7.2.2.1'
+gem 'rails', '~> 8.1.3'
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3', '>= 1.4'
+gem 'sqlite3', '>= 2.9.5'
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '>= 5.0'
 # Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
@@ -61,7 +61,8 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem 'dotenv-rails'
-  gem 'rubocop-rails-omakase', require: false
+  # gem 'rubocop-rails-omakase', require: false
+  gem 'rubocop-rails', require: false
   gem 'slim_lint'
 end
 
@@ -78,5 +79,5 @@ group :test do
 end
 
 group :production do
-  gem 'pg'
+  gem 'pg', '>= 1.6.3'
 end

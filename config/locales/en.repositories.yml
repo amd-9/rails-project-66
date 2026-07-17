@@ -13,3 +13,4 @@ en:
       title: Add new repository
     run_check:
       confirm: Check repository?
+    no_checks: No checks yet

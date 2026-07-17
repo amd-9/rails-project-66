@@ -33,7 +33,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resource :home, only: %i[index]
+    # resource :home, only: %i[index]
   end
 
   mount Sidekiq::Web => '/sidekiq'

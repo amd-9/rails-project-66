@@ -14,4 +14,7 @@ h2 Repositories list
                 tr
                     td = link_to index, repository_path(repo)
                     td = repo.name
-                    td = repo.checks.last.status
+                    - if !repo.checks.empty?
+                        td = repo.checks.last.status
+                    - else
+                        td =  t('repositories.no_checks')

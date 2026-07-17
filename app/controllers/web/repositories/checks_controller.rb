@@ -8,6 +8,6 @@ class Web::Repositories::ChecksController < Web::ApplicationController
   private
 
   def repository_params
-    params.require(:check).permit(:id)
+    params.expect(check: [:id])
   end
 end
