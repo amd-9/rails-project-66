@@ -4,6 +4,9 @@ setup:
 env-prepare:
 	cp -n .env.example .env || true
 
+lint-checks-prepare:
+	tar -czvf rubocop.tar.gz .rubocop.yml
+
 install:
 	bundle install
 
@@ -17,14 +20,14 @@ test:
 	bin/rails test
 
 lint:
-	rubocop
+	bin/rubocop
 	make lint-slim
 
 lint-slim:
 	slim-lint app/**/*.slim
 
 lint-fix:
-	rubocop -A
+	bin/rubocop -A
 
 db-migrate:
 	bin/rails db:migrate

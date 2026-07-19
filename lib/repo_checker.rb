@@ -1,62 +1,115 @@
 # frozen_string_literal: true
 
-require 'docker'
+require 'docker_engine_ruby'
 
 class RepoChecker
-  attr_reader :container
+  attr_reader :container, :docker, :images_by_language, :check
 
-  def check(repo_to_check)
-    prepare_container
+  def initialize
+    @images_by_language = {
+      'Ruby' => 'ruby:4.0.6',
+      'nodejs' => 'node:20.5.1'
+    }
+
+    @docker = DockerEngineRuby::Client.new(
+      base_url: ENV.fetch('DOCKER_API_BASE_URL', nil)
+    )
+  end
+
+  def run(repo_to_check)
+    @check = repo_to_check.checks.build({ status: :new })
+    @check.save!
+
+    prepare_container(repo_to_check.id, repo_to_check.language)
     clone_repo(repo_to_check)
+    upload_check_profile
+    check_repo(repo_to_check.language)
+  rescue StandardError => e
+    Rails.logger.debug 'Check exception'
+    Rails.logger.debug e
+    check.fail_check!
+  ensure
     destroy_container
   end
 
-  private
+  # private
 
-  def prepare_container
-    Docker::Image.create('fromImage' => 'ruby:4.0.6')
-    @container = Docker::Container.create('WorkingDir' => '/app', 'cmd' => ['tail', '-f', '/dev/null'], 'Image' => 'ruby:4.0.6')
-    @container.start
+  def prepare_container(id, language)
+    image = images_by_language[language]
+
+    @container = @docker.containers.create(
+      name: "check_#{id}",
+      config: {
+        Image: image,
+        WorkingDir: '/app',
+        Cmd: ['tail', '-f', '/dev/null'],
+        HostConfig: {
+          Memory: 1024 * 1024 * 1024,
+          NanoCpus: 1_000_000_000
+        }
+      }
+    )
+
+    @docker.containers.start(@container.id)
   end
 
   def destroy_container
     return if @container.nil?
 
-    begin
-      running_container = Docker::Container.get(@container.id)
-    rescue Docker::Error::NotFoundError
-      running_container = nil
-    end
-
-    return unless running_container
-
-    @container.delete(force: true)
+    @docker.containers.delete(@container.id, force: true)
   end
 
   def clone_repo(repo_to_check)
-    return unless @container.json['State']['Running']
+    check.clone_repo!
+    conatiner_exec_command(['git', 'clone', repo_to_check.clone_url.to_s, '.'])
+    check.commit_id = conatiner_exec_command(%w[git rev-parse HEAD])
+    check.save!
+  end
 
-    begin
-      check = repo_to_check.checks.build({ status: :new })
-      check.save!
-      check.clone_repo!
-      @container.exec(['git', 'clone', repo_to_check.clone_url.to_s, '.'])
-      repo_commit_id, = @container.exec(%w[git rev-parse HEAD])
-      check.commit_id = repo_commit_id[0].to_s
-      check.save!
-      @container.exec(%w[gem install rubocop])
-      @container.exec(%w[rubocop -v])
-      check.run_check!
-      check_result, = @container.exec(%w[rubocop])
+  def check_repo(_language)
+    conatiner_exec_command(%w[gem install rubocop rubocop-rails])
+    conatiner_exec_command(%w[rubocop -v])
+    check.run_check!
+    check_result = conatiner_exec_command(%w[rubocop])
 
-      if check_result[1].to_s.match?(/no offenses detected/)
-        check.passed = true
-        check.complete_check!
-      else
-        check.fail_check!
-      end
-    ensure
-      destroy_container
+    if check_result.to_s.match?(/no offenses detected/)
+      check.passed = true
+      check.complete_check!
+    else
+      check.fail_check!
     end
+  end
+
+  def upload_check_profile
+    file_bytes = File.binread('rubocop.tar.gz')
+
+    @docker.request(
+      method: :put,
+      path: "containers/#{@container.id}/archive",
+      query: { path: '/app' },
+      headers: { 'Content-Type' => 'application/x-tar' },
+      body: file_bytes
+    )
+  end
+
+  def conatiner_exec_command(command)
+    exec_command = @docker.containers.exec_(
+      @container.id,
+      cmd: command,
+      attach_stdout: true,
+      attach_stderr: true,
+      tty: true
+    )
+
+    command_raw_response = @docker.request(
+      method: :post,
+      path: "/exec/#{exec_command.id}/start",
+      body: {
+        Detach: false,
+        Tty: true
+      }
+    )
+
+    command_raw_response.string
   end
 end

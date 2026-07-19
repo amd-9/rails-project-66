@@ -6,6 +6,6 @@ class RunRepoCheckJob < ApplicationJob
   def perform(repo_id)
     repository = Repository.find(repo_id)
     repo_checker = ApplicationContainer.resolve(:repo_checker).new
-    repo_checker.check(repository)
+    repo_checker.run(repository)
   end
 end

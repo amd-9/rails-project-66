@@ -25,7 +25,7 @@ class Repository::Check < ApplicationRecord
     end
 
     event :fail_check do
-      transitions from: :checking, to: :failed
+      transitions from: %i[new cloning checking completed], to: :failed
     end
   end
 end

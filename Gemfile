@@ -37,6 +37,7 @@ gem 'bootsnap', require: false
 
 gem 'aasm'
 gem 'docker-api'
+gem 'docker-engine-ruby', '~> 0.7.5'
 gem 'dry-container'
 gem 'enumerize'
 gem 'mission_control-jobs'
