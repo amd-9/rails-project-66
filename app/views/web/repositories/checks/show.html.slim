@@ -6,3 +6,6 @@
         p = "Completed at: #{@check.updated_at}"
         p = "Status: #{@check.status}"
         = link_to t('checks.show.back'), repository_path(@check.repository), class: %w[btn btn-primary]
+
+h3 Check log
+p = @check.log

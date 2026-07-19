@@ -25,8 +25,7 @@ class RepoChecker
     upload_check_profile
     check_repo(repo_to_check.language)
   rescue StandardError => e
-    Rails.logger.debug 'Check exception'
-    Rails.logger.debug e
+    check.log = e.full_message
     check.fail_check!
   ensure
     destroy_container
@@ -70,7 +69,8 @@ class RepoChecker
     conatiner_exec_command(%w[gem install rubocop rubocop-rails])
     conatiner_exec_command(%w[rubocop -v])
     check.run_check!
-    check_result = conatiner_exec_command(%w[rubocop])
+    check_result = conatiner_exec_command(%w[rubocop --format json])
+    check.log = check_result
 
     if check_result.to_s.match?(/no offenses detected/)
       check.passed = true
