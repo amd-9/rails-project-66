@@ -49,7 +49,7 @@ class RepoChecker
       check.run_check!
       check_result, = @container.exec(%w[rubocop])
 
-      if check_result[0].to_s.match?(/no offenses detected/)
+      if check_result[1].to_s.match?(/no offenses detected/)
         check.passed = true
         check.complete_check!
       else
