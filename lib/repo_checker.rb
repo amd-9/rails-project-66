@@ -36,6 +36,8 @@ class RepoChecker
   def prepare_container(id, language)
     image = images_by_language[language]
 
+    prepare_image(image)
+
     @container = @docker.containers.create(
       name: "check_#{id}",
       config: {
@@ -50,6 +52,12 @@ class RepoChecker
     )
 
     @docker.containers.start(@container.id)
+  end
+
+  def prepare_image(image_to_prepare)
+    @docker.images.inspect_(image_to_prepare)
+  rescue DockerEngineRuby::Errors::NotFoundError
+    @docker.images.pull(from_image: image_to_prepare)
   end
 
   def destroy_container
