@@ -6,6 +6,7 @@ env-prepare:
 
 lint-checks-prepare:
 	tar -czvf rubocop.tar.gz .rubocop.yml
+	tar -czvf eslint.config.tar.gz eslint.config.js
 
 install:
 	bundle install

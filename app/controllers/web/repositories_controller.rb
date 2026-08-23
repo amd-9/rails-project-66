@@ -24,7 +24,7 @@ class Web::RepositoriesController < Web::ApplicationController
     return if current_user.nil?
 
     client = ApplicationContainer.resolve(:github_client).new access_token: current_user.token, auto_paginate: true
-    ruby_repos = client.search_repos("user:#{current_user.nickname} language:ruby")
+    ruby_repos = client.search_repos("user:#{current_user.nickname} language:ruby language:javascript")
 
     @repos = ruby_repos.total_count.positive? ? ruby_repos.items : []
   end

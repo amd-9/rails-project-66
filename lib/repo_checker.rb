@@ -1,47 +1,63 @@
 # frozen_string_literal: true
 
 require 'docker_engine_ruby'
+require_relative 'docker/exec_command'
+require_relative 'check_strategies/ruby_check_strategy'
+require_relative 'check_strategies/js_check_strategy'
 
 class RepoChecker
-  attr_reader :container, :docker, :images_by_language, :check
+  attr_reader :container, :docker, :images_by_language, :check_profiles_by_language, :check, :command_executor
+  attr_accessor :repo_to_check
 
   def initialize
     @images_by_language = {
       'Ruby' => 'ruby:4.0.6',
-      'nodejs' => 'node:20.5.1'
+      'JavaScript' => 'node:24.19.0'
+    }
+
+    @check_profiles_by_language = {
+      'Ruby' => 'rubocop.tar.gz',
+      'JavaScript' => 'eslint.config.tar.gz'
+    }
+
+    @check_strategies_by_language = {
+      'Ruby' => RubyCheckStrategy,
+      'JavaScript' => JSCheckStrategy
     }
 
     @docker = DockerEngineRuby::Client.new(
       base_url: ENV.fetch('DOCKER_API_BASE_URL', nil)
     )
+
+    @command_executor = ExecCommand.new(@docker)
   end
 
   def run(repo_to_check)
+    @repo_to_check = repo_to_check
     @check = repo_to_check.checks.build({ status: :new })
     @check.save!
 
-    prepare_container(repo_to_check.id, repo_to_check.language)
-    clone_repo(repo_to_check)
+    prepare_container
+    clone_repo
     upload_check_profile
-    check_repo(repo_to_check.language)
+    check_repo
   rescue StandardError => e
-    check.log = e.full_message
-    check.fail_check!
+    @check.log = e.full_message
+    @check.fail_check! unless check.failed?
   ensure
     destroy_container
+    @check.save!
   end
 
   # private
 
-  def prepare_container(id, language)
-    image = images_by_language[language]
-
-    prepare_image(image)
+  def prepare_container
+    prepare_image
 
     @container = @docker.containers.create(
-      name: "check_#{id}",
+      name: "check_#{@check.id}",
       config: {
-        Image: image,
+        Image: images_by_language[@repo_to_check.language],
         WorkingDir: '/app',
         Cmd: ['tail', '-f', '/dev/null'],
         HostConfig: {
@@ -54,10 +70,10 @@ class RepoChecker
     @docker.containers.start(@container.id)
   end
 
-  def prepare_image(image_to_prepare)
-    @docker.images.inspect_(image_to_prepare)
+  def prepare_image
+    @docker.images.inspect_(images_by_language[@repo_to_check.language])
   rescue DockerEngineRuby::Errors::NotFoundError
-    @docker.images.pull(from_image: image_to_prepare)
+    @docker.images.pull(from_image: images_by_language[@repo_to_check.language])
   end
 
   def destroy_container
@@ -66,21 +82,20 @@ class RepoChecker
     @docker.containers.delete(@container.id, force: true)
   end
 
-  def clone_repo(repo_to_check)
+  def clone_repo
     check.clone_repo!
-    conatiner_exec_command(['git', 'clone', repo_to_check.clone_url.to_s, '.'])
-    check.commit_id = conatiner_exec_command(%w[git rev-parse HEAD])
+    @command_executor.container_exec_command(@container, ['git', 'clone', @repo_to_check.clone_url.to_s, '.'])
+    check.commit_id = @command_executor.container_exec_command(@container, %w[git rev-parse HEAD])
     check.save!
   end
 
-  def check_repo(_language)
-    conatiner_exec_command(%w[gem install rubocop rubocop-rails])
-    conatiner_exec_command(%w[rubocop -v])
-    check.run_check!
-    check_result = conatiner_exec_command(%w[rubocop --format json])
-    check.log = check_result
+  def check_repo
+    check_strategy = @check_strategies_by_language[@repo_to_check.language].new
 
-    if check_result.to_s.match?(/no offenses detected/)
+    check.run_check!
+    check.log = check_strategy.check(@container, command_executor)
+
+    if check.log.to_s.match?(/no offenses detected/)
       check.passed = true
       check.complete_check!
     else
@@ -89,7 +104,7 @@ class RepoChecker
   end
 
   def upload_check_profile
-    file_bytes = File.binread('rubocop.tar.gz')
+    file_bytes = File.binread(check_profiles_by_language[@repo_to_check.language])
 
     @docker.request(
       method: :put,
@@ -98,26 +113,5 @@ class RepoChecker
       headers: { 'Content-Type' => 'application/x-tar' },
       body: file_bytes
     )
-  end
-
-  def conatiner_exec_command(command)
-    exec_command = @docker.containers.exec_(
-      @container.id,
-      cmd: command,
-      attach_stdout: true,
-      attach_stderr: true,
-      tty: true
-    )
-
-    command_raw_response = @docker.request(
-      method: :post,
-      path: "/exec/#{exec_command.id}/start",
-      body: {
-        Detach: false,
-        Tty: true
-      }
-    )
-
-    command_raw_response.string
   end
 end
