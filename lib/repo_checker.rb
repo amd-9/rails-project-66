@@ -46,6 +46,7 @@ class RepoChecker
     @check.fail_check! unless check.failed?
   ensure
     destroy_container
+    @check.log = @check.log.sub(/(?:\e\[[0-9;]*[a-zA-Z]|\r|\n|\\)+\z/, '')
     @check.save!
   end
 
