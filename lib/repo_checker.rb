@@ -22,7 +22,7 @@ class RepoChecker
 
     @check_strategies_by_language = {
       'Ruby' => RubyCheckStrategy,
-      'JavaScript' => JSCheckStrategy
+      'JavaScript' => JsCheckStrategy
     }
 
     @docker = DockerEngineRuby::Client.new(

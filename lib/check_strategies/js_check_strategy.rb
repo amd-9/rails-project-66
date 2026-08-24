@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class JSCheckStrategy
+class JsCheckStrategy
   def check(container, command_executor)
     command_executor.container_exec_command(container, ['mkdir', '/eslint-runner'])
     command_executor.container_exec_command(container, ['bash', '-c', 'cd /eslint-runner && npm install eslint@10.9.0 @eslint/js --save-dev'])
