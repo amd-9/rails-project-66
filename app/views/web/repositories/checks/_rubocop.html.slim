@@ -1,0 +1,33 @@
+.card
+    .card-body 
+        h5.card-title Linter info
+        h6.card-subtitle.mb-2.text-body-secondary = "Ruby version #{log['metadata']['ruby_version']}"
+        h6.card-subtitle.mb-2.text-body-secondary = "Rubocop version #{log['metadata']['rubocop_version']}"
+
+
+.table-responsive
+    table.table.table-striped.table-sm
+        thead
+            tr
+                th #
+                th Path
+                th Offenses
+        tbody
+            - log['files'].each_with_index do | file, index|
+                tr
+                    td = index
+                    td = file["path"]
+                    td
+                        - file["offenses"].each do | offence |
+                            .table.table-bordered
+                                thead
+                                    tr
+                                        th Severity
+                                        th Message
+                                        th Cop name
+                                tbody
+                                    tr
+                                        td = offence["severity"]
+                                        td = offence["message"]
+                                        td = offence["cop_name"]
+

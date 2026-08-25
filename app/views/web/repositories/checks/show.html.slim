@@ -7,5 +7,7 @@
         p = "Status: #{@check.status}"
         = link_to t('checks.show.back'), repository_path(@check.repository), class: %w[btn btn-primary]
 
-h3 Check log
-p = @check.log
+- if @check.repository.language == 'Ruby'
+    = render partial: "rubocop", locals: { log: JSON.parse(@check.log)}
+- else
+    = render partial: "eslint", locals: { log: JSON.parse(@check.log)}
